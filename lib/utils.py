@@ -5,6 +5,7 @@ from django.http import HttpResponse
 import hashlib
 from cerberus import Validator
 import requests
+from django.conf import settings
 
 DATACHECK = Validator()
 
@@ -97,7 +98,7 @@ def ErrResp(c, extra_arg={}, d=None):
         'm': m
     })
 
-def mailgun_send_email(to, subject, html, from_email):
+def mailgun_send_email(subject, html, to, from_email):
     result = requests.post(
         settings.MAILGUN_MESSAGE_URL,
         auth=("api", settings.MAILGUN_API),

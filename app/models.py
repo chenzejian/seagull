@@ -84,7 +84,7 @@ email_schema = {
         'type': 'string',
     },
     'cc_user': {
-        'required': True,
+        'required': False,
         'type': 'string',
     },
     'send_type': {

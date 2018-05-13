@@ -39,19 +39,20 @@ def send_email(request):
     )
     if params.get('error'):
         return utils.ErrResp((-1, params.get('error')))
-        
     project = Project.objects.get(client_id=params['client_id'])
-
+    print(project.id)
     email = Email(
         title=params['title'],
         content=params['content'],
-        from_user=params['from_user'],
+        from_user=params['from_user'], 
         receive_user=params['receive_user'],
-        cc_user=params['cc_user'], 
+        cc_user=params['cc_user'] if 'cc_user' in params else '', 
         send_type=params['send_type'], 
         send_times=0,
-        project=project
+        project=project,
+        task_id=0
     )
+    
     email.save()
 
     res = tasks.send_mail.delay(email.id)

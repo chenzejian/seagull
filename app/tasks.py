@@ -16,7 +16,7 @@ def send_mail(email_id):
     # send_mass_mail((message1, message2), fail_silently=False)
 
     # EmailMessage类
-    # message = EmailMessage('Hello', 'Body goes here', '405048922@qq.com',
+    # message = EmailMessage('Hello', 'Body goes here', '405048922@qq.cozzzm',
     #         ['chenzejian304@163.com'], ['chenzejian304@126.com'],
     #         reply_to=['405048922@qq.com'], headers={'Message-ID': 'foo'})
     # img_data = 'lalalalalala'
@@ -31,25 +31,39 @@ def send_mail(email_id):
     # msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
     # msg.attach_alternative(html_content, "text/html")
     # msg.send()
+
+    # email = Email.objects.get(id=email_id)
+    # email.send_times=email.send_times+1
+    # email.save()
+
+    # receive_user = email.receive_user.split(',')
+    # email.receive_user = email.receive_user.split(',')
+    # subject, from_email, to = email.title, email.from_user, receive_user 
+    # html_content = 'sssssssssssssssssssss'
+    # msg = EmailMessage(subject, html_content, from_email, to)
+    # msg.content_subtype = "html"  # Main content is now text/html
+    # msg.send()
+
     email = Email.objects.get(id=email_id)
-    
-    subject = email.title 
-    html_content = email.content
-    from_user = email.from_user
-    receive_user = email.receive_user.split(',') 
-    cc_user = email.cc_user.split(',') 
-    send_type = Email.SEND_TYPE_NAME[email.send_type]
     email.send_times=email.send_times+1
     email.save()
 
-    if send_type == 'mailgun':
-        utils.mailgun_send_email(receive_user, subject, html_content, from_user)
-    elif send_type == 'qqsmtp':
-        # 配置里写的就是qq smtp服务
-        msg = EmailMessage(subject, html_content, from_user, receive_user, cc_user)
+    receive_user = email.receive_user.split(',')
+    email.receive_user = email.receive_user.split(',')
+    cc_user = []
+    if email.cc_user != '':
+        cc_user = email.cc_user.split(',')
+        
+    subject, from_email, to, content = email.title, email.from_user, receive_user, email.content
+
+    send_type = Email.SEND_TYPE_NAME[email.send_type]
+    if send_type == 'qqsmtp':
+        msg = EmailMessage(subject, content, from_email, to, cc_user)
         msg.content_subtype = "html"  # Main content is now text/html
         msg.send()
-    elif send_type == 'self_service':
-        pass
+    elif send_type == 'mailgun':
+        utils.mailgun_send_email(subject, content, to, from_user)
     else:
-        raise 
+        pass
+        
+
