@@ -7,3 +7,4 @@ PyMySQL==0.7.11
 django-celery-results==1.0.1
 requests==2.18.4
 Cerberus==1.1
+uwsgi==2.0.17
