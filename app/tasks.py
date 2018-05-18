@@ -62,7 +62,7 @@ def send_mail(email_id):
         msg.content_subtype = "html"  # Main content is now text/html
         msg.send()
     elif send_type == 'mailgun':
-        utils.mailgun_send_email(subject, content, to, from_user)
+        utils.mailgun_send_email(subject, content, to, from_email)
     else:
         pass
         

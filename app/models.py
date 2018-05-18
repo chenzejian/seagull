@@ -76,7 +76,7 @@ email_schema = {
         'type': 'string',
     },
     'from_user': {
-        'required': True,
+        'required': False,
         'type': 'string',
     },
     'receive_user': {

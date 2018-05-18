@@ -7,6 +7,7 @@ from .models import Email, Project, email_schema
 from lib import utils
 from functools import wraps
 import time
+from django.conf import settings
 
 
 def check_assign(func):
@@ -44,7 +45,7 @@ def send_email(request):
     email = Email(
         title=params['title'],
         content=params['content'],
-        from_user=params['from_user'], 
+        from_user=params['from_user'] if 'from_user' in params else settings.DEFAULT_FROM_USER, 
         receive_user=params['receive_user'],
         cc_user=params['cc_user'] if 'cc_user' in params else '', 
         send_type=params['send_type'], 
