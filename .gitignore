@@ -1,0 +1,3 @@
+*.pyc
+config/celeryconfig.py
+config/settings.py
