@@ -9,6 +9,15 @@ from suit.widgets import (
 from django.core.urlresolvers import reverse
 
 
+def custom_titled_filter(title):
+    class Wrapper(admin.FieldListFilter):
+        def __new__(cls, *args, **kwargs):
+            instance = admin.FieldListFilter.create(*args, **kwargs)
+            instance.title = title
+            return instance
+    return Wrapper
+
+
 class EmailForm(ModelForm):
     class Meta:
         widgets = {
@@ -24,17 +33,18 @@ class EmailAdmin(admin.ModelAdmin):
     form = EmailForm
     fields = ['title', 'send_times', 'content']
     list_display = [
+        'project_name',
         'title',
-        'content',
+        'html_content',
         'send_times',
         'task_link',
         'status',
         # 'traceback',
-        'project_name',
         'created_at',
         'updated_at'
     ]
-    search_fields = ['title']
+    list_filter = (('project__name', custom_titled_filter('project_name')),)
+    search_fields = ['title', 'content']
     
     def has_add_permission(self, request):
         return False
@@ -49,9 +59,14 @@ class EmailAdmin(admin.ModelAdmin):
         return x.project.name
 
     def task_link(self, x):
-      return u'<a href="/admin/django_celery_results/taskresult/%s/change/">%s</a>' % (x.task.id, x.task.task_id)
+      return u'<a href="/django_celery_results/taskresult/%s/change/">%s</a>' % (x.task.id, x.task.task_id)
     task_link.allow_tags = True
     task_link.short_description = "task"
+
+    def html_content(self, x):
+      return u'<div>%s</div>' % (x.content)
+    html_content.allow_tags = True
+    html_content.short_description = "content"
 
 
 class ProjectForm(ModelForm):
