@@ -35,6 +35,7 @@ cp config/celeryconfig.py.demo config/celeryconfig.py
 
 ```shell
 python manage.py migrate
+python manage.py runscript sync_database
 python manage.py createsuperuser
 ```
 

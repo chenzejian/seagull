@@ -8,3 +8,4 @@ django-celery-results==1.0.1
 requests==2.18.4
 Cerberus==1.1
 uwsgi==2.0.17
+django-extensions==2.0.0
